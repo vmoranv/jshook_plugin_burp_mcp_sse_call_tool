@@ -1,0 +1,5 @@
+name: burp-mcp-sse-call-tool
+description: Burp MCP SSE bridge plugin for jshookmcp.
+author: vmoranv
+source_repo: https://github.com/vmoranv/jshook_plugin_burp_mcp_sse_call_tool
+

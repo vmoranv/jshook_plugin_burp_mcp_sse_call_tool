@@ -1,0 +1,24 @@
+{
+  "name": "@jshookmcpextension/plugin-burp-mcp-sse-call-tool",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "dotenv": "^17.3.1",
+    "@jshookmcp/extension-sdk": "^0.1.0"
+  },
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "typescript": "^5.9.3"
+  },
+  "private": true
+}
+
+
