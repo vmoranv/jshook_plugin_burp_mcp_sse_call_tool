@@ -242,7 +242,7 @@ function bind(methodName) {
         if (typeof method !== 'function') {
             throw new Error(`Missing Burp SSE handler: ${methodName}`);
         }
-        return method(args ?? {});
+        return method.call(handlers, args ?? {});
     };
 }
 const domainManifest = {
@@ -252,7 +252,7 @@ const domainManifest = {
     depKey: DEP_KEY,
     profiles: ['workflow', 'full', 'reverse'],
     ensure() {
-        const sseUrl = process.env.BURP_MCP_SSE_URL ?? 'http://127.0.0.1:9876/sse';
+        const sseUrl = process.env.BURP_MCP_SSE_URL ?? 'http://127.0.0.1:9876';
         const authToken = process.env.BURP_MCP_AUTH_TOKEN;
         return new BurpMcpSseHandlers(sseUrl, authToken);
     },
@@ -301,11 +301,6 @@ const plugin = {
             return { valid: false, errors: ['Plugin disabled by config'] };
         return { valid: true, errors: [] };
     },
-    onRegister(ctx) {
-        ctx.registerDomain(domainManifest);
-        ctx.registerMetric('burp_mcp_sse_status_calls_total');
-        ctx.registerMetric('burp_mcp_sse_list_tools_calls_total');
-        ctx.registerMetric('burp_mcp_sse_call_tool_calls_total');
-    },
 };
 export default plugin;
+//# sourceMappingURL=manifest.js.map

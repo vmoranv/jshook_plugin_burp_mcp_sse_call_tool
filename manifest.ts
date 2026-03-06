@@ -266,18 +266,17 @@ const tools: Tool[] = [
   },
 ];
 
-type HandlerMap = Record<string, (args: ToolArgs) => Promise<unknown>>;
 const DEP_KEY = 'burpMcpSseHandlers';
 const DOMAIN = 'burp-mcp-sse-call-tool';
 
 function bind(methodName: string) {
   return (deps: ToolHandlerDeps) => async (args: ToolArgs) => {
-    const handlers = deps[DEP_KEY] as HandlerMap;
+    const handlers = deps[DEP_KEY] as Record<string, unknown>;
     const method = handlers[methodName];
     if (typeof method !== 'function') {
       throw new Error(`Missing Burp SSE handler: ${methodName}`);
     }
-    return method(args ?? {});
+    return method.call(handlers, args ?? {});
   };
 }
 
@@ -288,7 +287,7 @@ const domainManifest: DomainManifest = {
   depKey: DEP_KEY,
   profiles: ['workflow', 'full', 'reverse'],
   ensure() {
-    const sseUrl = process.env.BURP_MCP_SSE_URL ?? 'http://127.0.0.1:9876/sse';
+    const sseUrl = process.env.BURP_MCP_SSE_URL ?? 'http://127.0.0.1:9876';
     const authToken = process.env.BURP_MCP_AUTH_TOKEN;
     return new BurpMcpSseHandlers(sseUrl, authToken);
   },
@@ -336,12 +335,6 @@ const plugin: PluginContract = {
     const enabled = getPluginBooleanConfig(ctx, 'burp-mcp-sse-call-tool', 'enabled', true);
     if (!enabled) return { valid: false, errors: ['Plugin disabled by config'] };
     return { valid: true, errors: [] };
-  },
-  onRegister(ctx: PluginLifecycleContext): void {
-    ctx.registerDomain(domainManifest);
-    ctx.registerMetric('burp_mcp_sse_status_calls_total');
-    ctx.registerMetric('burp_mcp_sse_list_tools_calls_total');
-    ctx.registerMetric('burp_mcp_sse_call_tool_calls_total');
   },
 };
 
