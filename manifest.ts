@@ -223,7 +223,7 @@ function assertLoopbackUrl(value: string): string {
   return url.toString();
 }
 
-export default createExtension('io.github.vmoranv.burp-mcp-sse-call-tool', '0.1.0')
+const plugin = createExtension('io.github.vmoranv.burp-mcp-sse-call-tool', '0.1.0')
   .compatibleCore('>=0.1.0')
   .allowHost(['127.0.0.1', 'localhost', '::1'])
   .allowTool(['burp_mcp_sse_status', 'burp_mcp_sse_list_tools', 'burp_mcp_sse_call_tool'])
@@ -284,3 +284,12 @@ export default createExtension('io.github.vmoranv.burp-mcp-sse-call-tool', '0.1.
     if (!enabled) return { valid: false, errors: ['Plugin disabled by config'] };
     return { valid: true, errors: [] };
   });
+
+Object.defineProperty(plugin, 'workflows', {
+  value: [],
+  enumerable: false,
+  configurable: true,
+  writable: false,
+});
+
+export default plugin;
